@@ -11,19 +11,20 @@ import { ReadableStream } from '../../../../base/common/stream.js';
 import { LeftAngleBracket } from '../simpleCodec/tokens/angleBrackets.js';
 import { ExclamationMark } from '../simpleCodec/tokens/exclamationMark.js';
 import { BaseDecoder } from '../../../../base/common/codecs/baseDecoder.js';
-import { SimpleDecoder, TSimpleToken } from '../simpleCodec/simpleDecoder.js';
 import { MarkdownCommentStart, PartialMarkdownCommentStart } from './parsers/markdownComment.js';
+import { MarkdownExtensionsToken } from '../markdownExtensionsCodec/tokens/markdownExtensionsToken.js';
 import { MarkdownLinkCaption, PartialMarkdownLink, PartialMarkdownLinkCaption } from './parsers/markdownLink.js';
+import { MarkdownExtensionsDecoder, TMarkdownExtensionsToken } from '../markdownExtensionsCodec/markdownExtensionsDecoder.js';
 
 /**
- * Tokens handled by this decoder.
+ * Tokens produced by this decoder.
  */
-export type TMarkdownToken = MarkdownToken | TSimpleToken;
+export type TMarkdownToken = MarkdownToken | TMarkdownExtensionsToken;
 
 /**
  * Decoder capable of parsing markdown entities (e.g., links) from a sequence of simple tokens.
  */
-export class MarkdownDecoder extends BaseDecoder<TMarkdownToken, TSimpleToken> {
+export class MarkdownDecoder extends BaseDecoder<TMarkdownToken, TMarkdownExtensionsToken> {
 	/**
 	 * Current parser object that is responsible for parsing a sequence of tokens into
 	 * some markdown entity. Set to `undefined` when no parsing is in progress at the moment.
@@ -36,10 +37,16 @@ export class MarkdownDecoder extends BaseDecoder<TMarkdownToken, TSimpleToken> {
 	constructor(
 		stream: ReadableStream<VSBuffer>,
 	) {
-		super(new SimpleDecoder(stream));
+		super(new MarkdownExtensionsDecoder(stream));
 	}
 
-	protected override onStreamData(token: TSimpleToken): void {
+	protected override onStreamData(token: TMarkdownExtensionsToken): void {
+		// tokens from `markdown extensions` are forwarded immediately
+		if (token instanceof MarkdownExtensionsToken) {
+			this._onData.fire(token);
+			return;
+		}
+
 		// `markdown links` start with `[` character, so here we can
 		// initiate the process of parsing a markdown link
 		if (token instanceof LeftBracket && !this.current) {

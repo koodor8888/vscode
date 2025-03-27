@@ -125,7 +125,7 @@ export class MarkdownCommentStart extends ParserBase<TSimpleToken, MarkdownComme
 	/**
 	 * Convert the current token sequence into a {@link MarkdownComment} token.
 	 *
-	 * Note! that this method marks the current parser object as "consumend"
+	 * Note! that this method marks the current parser object as "consumed"
 	 *       hence it should not be used after this method is called.
 	 */
 	public asMarkdownComment(): MarkdownComment {

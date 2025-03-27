@@ -140,7 +140,7 @@ const toMarker = (
  * The class that manages creation and disposal of {@link PromptLinkDiagnosticsProvider}
  * classes for each specific editor text model.
  */
-export class PromptLinkDiagnosticsInstanceManager extends Disposable {
+class PromptLinkDiagnosticsInstanceManager extends Disposable {
 	/**
 	 * Currently available {@link PromptLinkDiagnosticsProvider} instances.
 	 */

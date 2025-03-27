@@ -24,6 +24,9 @@ import { ObservableDisposable } from '../../../../../../base/common/observableDi
 import { IInstantiationService } from '../../../../../../platform/instantiation/common/instantiation.js';
 import { MarkdownLink } from '../../../../../../editor/common/codecs/markdownCodec/tokens/markdownLink.js';
 import { OpenFailed, NotPromptFile, RecursiveReference, FolderReference, ResolveError } from '../../promptFileReferenceErrors.js';
+import { BaseToken } from '../../../../../../editor/common/codecs/baseToken.js';
+import { MarkdownToken } from '../../../../../../editor/common/codecs/markdownCodec/tokens/markdownToken.js';
+import { PromptToken } from '../codecs/tokens/promptToken.js';
 
 /**
  * Error conditions that may happen during the file reference resolution.
@@ -203,6 +206,7 @@ export class BasePromptParser<TContentsProvider extends IPromptContentsProvider>
 		this.stream?.dispose();
 		delete this.stream;
 		delete this._errorCondition;
+		this.receivedTokens = [];
 
 		// dispose all currently existing references
 		this.disposeReferences();
@@ -224,6 +228,11 @@ export class BasePromptParser<TContentsProvider extends IPromptContentsProvider>
 
 		// when some tokens received, process and store the references
 		this.stream.on('data', (token) => {
+			// TODO: @legomushroom
+			if ((token instanceof MarkdownToken) || (token instanceof PromptToken)) {
+				this.receivedTokens.push(token);
+			}
+
 			if (token instanceof PromptVariableWithData) {
 				try {
 					this.onReference(FileReference.from(token), [...seenReferences]);
@@ -250,6 +259,18 @@ export class BasePromptParser<TContentsProvider extends IPromptContentsProvider>
 
 		// start receiving data on the stream
 		this.stream.start();
+	}
+
+	/**
+	 * TODO: @legomushroom
+	 */
+	private receivedTokens: BaseToken[] = [];
+
+	/**
+	 * TODO: @legomushroom
+	 */
+	public get tokens(): readonly BaseToken[] {
+		return [...this.receivedTokens];
 	}
 
 	/**

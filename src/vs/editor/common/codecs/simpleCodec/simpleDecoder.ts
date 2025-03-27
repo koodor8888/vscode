@@ -7,6 +7,7 @@ import { At } from './tokens/at.js';
 import { Hash } from './tokens/hash.js';
 import { Dash } from './tokens/dash.js';
 import { Colon } from './tokens/colon.js';
+import { Slash } from './tokens/slash.js';
 import { FormFeed } from './tokens/formFeed.js';
 import { Tab } from '../simpleCodec/tokens/tab.js';
 import { Word } from '../simpleCodec/tokens/word.js';
@@ -22,7 +23,6 @@ import { LeftBracket, RightBracket, TBracket } from './tokens/brackets.js';
 import { BaseDecoder } from '../../../../base/common/codecs/baseDecoder.js';
 import { LeftParenthesis, RightParenthesis, TParenthesis } from './tokens/parentheses.js';
 import { LeftAngleBracket, RightAngleBracket, TAngleBracket } from './tokens/angleBrackets.js';
-import { Slash } from './tokens/slash.js';
 
 /**
  * A token type that this decoder can handle.

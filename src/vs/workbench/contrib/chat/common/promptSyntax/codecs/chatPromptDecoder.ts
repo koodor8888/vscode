@@ -16,14 +16,13 @@ import { PromptVariable, PromptVariableWithData } from './tokens/promptVariable.
 import { At } from '../../../../../../editor/common/codecs/simpleCodec/tokens/at.js';
 import { Hash } from '../../../../../../editor/common/codecs/simpleCodec/tokens/hash.js';
 import { Slash } from '../../../../../../editor/common/codecs/simpleCodec/tokens/slash.js';
-import { MarkdownLink } from '../../../../../../editor/common/codecs/markdownCodec/tokens/markdownLink.js';
 import { PartialPromptVariableName, PartialPromptVariableWithData } from './parsers/promptVariableParser.js';
 import { MarkdownDecoder, TMarkdownToken } from '../../../../../../editor/common/codecs/markdownCodec/markdownDecoder.js';
 
 /**
  * Tokens produced by this decoder.
  */
-export type TChatPromptToken = MarkdownLink | (PromptVariable | PromptVariableWithData) | PromptAtMention | PromptSlashCommand;
+export type TChatPromptToken = TMarkdownToken | (PromptVariable | PromptVariableWithData) | PromptAtMention | PromptSlashCommand;
 
 /**
  * Decoder for the common chatbot prompt message syntax.
@@ -74,17 +73,19 @@ export class ChatPromptDecoder extends BaseDecoder<TChatPromptToken, TMarkdownTo
 		// if current parser was not yet initiated, - we are in the general "text"
 		// parsing mode, therefore re-emit the token immediately and continue
 		if (!this.current) {
-			// at the moment, the decoder outputs only specific markdown tokens, like
-			// the `markdown link` one, so re-emit only these tokens ignoring the rest
-			//
-			// note! to make the decoder consistent with others we would need to:
-			// 	- re-emit all tokens here
-			//  - collect all "text" sequences of tokens and emit them as a single
-			// 	  "text" sequence token
-			if (token instanceof MarkdownLink) {
-				this._onData.fire(token);
-			}
+			// // at the moment, the decoder outputs only specific markdown tokens, like
+			// // the `markdown link` one, so re-emit only these tokens ignoring the rest
+			// //
+			// // note! to make the decoder consistent with others we would need to:
+			// // 	- re-emit all tokens here
+			// //  - collect all "text" sequences of tokens and emit them as a single
+			// // 	  "text" sequence token
+			// if (token instanceof MarkdownLink) {
+			// 	this._onData.fire(token);
+			// }
 
+			// TODO: @legomushroom
+			this._onData.fire(token);
 			return;
 		}
 

@@ -21,7 +21,7 @@ import { ILanguageFeaturesService } from '../../../../../../editor/common/servic
 /**
  * Provides link references for prompt files.
  */
-export class PromptLinkProvider extends Disposable implements LinkProvider {
+class PromptLinkProvider extends Disposable implements LinkProvider {
 	constructor(
 		@IPromptsService private readonly promptsService: IPromptsService,
 		@ILanguageFeaturesService private readonly languageService: ILanguageFeaturesService,

@@ -87,7 +87,7 @@ const findFileReference = (
 /**
  * Provides reference paths autocompletion for the `#file:` variables inside prompts.
  */
-export class PromptPathAutocompletion extends Disposable implements CompletionItemProvider {
+class PromptPathAutocompletion extends Disposable implements CompletionItemProvider {
 	/**
 	 * Debug display name for this provider.
 	 */
